@@ -61,7 +61,7 @@ function menu_users ()
   "Créer un utilisateur (C)" \
   "Supprimer un utilisateur (D)" \
   "Renommer un utilisateur (R)" \
-  # "Bloquer un utilisateur (B)" \
+  "Bloquer un utilisateur (B)" \
   "Afficher la liste des utilisateurs (L)" \
   "Revenir au menu principal (Q)" )
 
@@ -81,7 +81,7 @@ function menu_users ()
       # Touche "R" : renommer un utilisateur
       [rR]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; user_rename ; echo ; break ;;
       # Touche "B" : bloquer un utilisateur
-      # [bB]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo option4 ;;
+      [bB]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; usrlock ; echo ; break ;;
       # Touche "L" : afficher la liste des utilisateurs
       [lL]) echo ; list_users ; echo ; break ;;
       # Touche "Q" : revenir au menu principal

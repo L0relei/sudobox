@@ -12,6 +12,7 @@
 . groups.sh
 . usradd.sh
 . list_users.sh
+. usrlock.sh
 
 clear
 blue_bold "------------------------------------"
