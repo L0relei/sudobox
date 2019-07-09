@@ -10,6 +10,8 @@
 . menus.sh
 . users.sh
 . groups.sh
+. usradd.sh
+. list_users.sh
 
 clear
 blue_bold "------------------------------------"
