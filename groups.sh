@@ -1,7 +1,7 @@
 #!/bin/bash
 ###########################################
 #                                         #
-# Gestion des groupes d'utilisateurs v0.1 #
+# Gestion des groupes d'utilisateurs v0.2 #
 #                                         #
 ###########################################
 
@@ -86,6 +86,6 @@ function group_list ()
   # On filtre pour n'afficher que les noms des groupes dont l'ID est supérieur ou égal à 1001
   # On affiche uniquement les noms de groupes sous forme de liste séparée par des virgules
   blue_bold "Liste des groupes"
-  sudo cat /etc/group | egrep :[0-9]\{4,\}: | grep -v 1000 | cut -d":" -f1 | paste -s -d","
+  cat /etc/group | egrep :[0-9]\{4,\}: | grep -v 1000 | cut -d":" -f1 | paste -s -d","
   
 }
