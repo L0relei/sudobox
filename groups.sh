@@ -65,10 +65,10 @@ function group_delete ()
       [ -n "$group_name" ] && [ -z "$(sudo cat /etc/group | cut -d":" -f1 | grep ^"$group_name"$)" ] && echo "Ce groupe n'existe pas."
     done
 
-    # Suppression du groupe   
-    sudo groupdel $group_name
+    # Suppression du groupe en redirigeant les erreurs dans le fichier err
+    sudo groupdel $group_name > err 2>&1
 
-    echo "Le groupe $group_name a été supprimé avec succès."
+    [ -s err ] && echo "Le groupe $group_name doit être vide pour être supprimé." || echo "Le groupe $group_name a été supprimé avec succès."
 
     # Proposition de supprimer un autre groupe
     read -p "Voulez-vous supprimer un autre groupe ? (O/N) " delete_another

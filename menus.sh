@@ -15,10 +15,10 @@ function menu_main ()
 
   # Options du menu
   menu_main_opt=( \
-  "Gestion des utilisateurs (U)" \
-  "Gestion des groupes d'utilisateurs (G)" \
-  # "Gestion des fichiers et dossiers (F)" \
-  # "Gestion des droits (P)" \
+  "Gestion des utilisateurs" \
+  "Gestion des groupes d'utilisateurs" \
+  # "Gestion des fichiers et dossiers" \
+  # "Gestion des droits" \
   "Quitter (Q)" )                      
 
   # Modification du message de prompt de la commande select
@@ -28,16 +28,16 @@ function menu_main ()
   select item in "${menu_main_opt[@]}"
   do
     case $REPLY in
-      # Touche "U" : menu de gestion des utilisateurs
-      [uU]) echo ; menu_users ; break ;;
-      # Touche "G" : menu de gestion des groupes
-      [gG]) echo ; menu_groups ; break ;;
-      # Touche "F" : menu des gestion des fichiers et dossiers
-      # [fF]) echo "Fonctionnalité à venir" ;;
-      # Touche "P" : menu des gestion des permissions
-      # [pP]) echo "Fonctionnalité à venir" ;;
-      # Touche "Q" : quitter
-      [qQ]) echo ; blue_bold "Merci d'avoir utilisé la boîte à outils !" ; echo ; break ;;
+      # Touche "1" : menu de gestion des utilisateurs
+      1) echo ; menu_users ; break ;;
+      # Touche "2" : menu de gestion des groupes
+      2) echo ; menu_groups ; break ;;
+      # Touche "3" : menu des gestion des fichiers et dossiers
+      # 3) echo "Fonctionnalité à venir" ;;
+      # Touche "4" : menu des gestion des permissions
+      # 4) echo "Fonctionnalité à venir" ;;
+      # Touche "3" ou "Q" : quitter
+      [3qQ]) echo ; blue_bold "Merci d'avoir utilisé la boîte à outils !" ; echo ; break ;;
       # Autres touches : nouvelle saisie
       *) echo "Choix incorrect" ;;
     esac
@@ -58,11 +58,11 @@ function menu_users ()
 
   # Options du menu (sudoer)
   menu_users_opt=( \
-  "Créer un utilisateur (C)" \
-  "Supprimer un utilisateur (D)" \
-  "Renommer un utilisateur (R)" \
-  "Bloquer un utilisateur (B)" \
-  "Afficher la liste des utilisateurs (L)" \
+  "Créer un utilisateur" \
+  "Supprimer un utilisateur" \
+  "Renommer un utilisateur" \
+  "Bloquer un utilisateur" \
+  "Afficher la liste des utilisateurs" \
   "Revenir au menu principal (Q)" )
 
   # Options du menu (non sudoer)
@@ -74,18 +74,18 @@ function menu_users ()
   select item in "${menu_users_opt[@]}"
   do
     case $REPLY in
-      # Touche "C" : créer un utilisateur
-      [cC]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; add_user ; echo ; break ;;
-      # Touche "D" : supprimer un utilisateur
-      [dD]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; user_del ; echo ; break ;;
-      # Touche "R" : renommer un utilisateur
-      [rR]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; user_rename ; echo ; break ;;
-      # Touche "B" : bloquer un utilisateur
-      [bB]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; usrlock ; echo ; break ;;
-      # Touche "L" : afficher la liste des utilisateurs
-      [lL]) echo ; list_users ; echo ; break ;;
-      # Touche "Q" : revenir au menu principal
-      [qQ]) echo ; break ;;
+      # Touche "1" : créer un utilisateur
+      1) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; add_user ; echo ; break ;;
+      # Touche "2" : supprimer un utilisateur
+      2) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; user_del ; echo ; break ;;
+      # Touche "3" : renommer un utilisateur
+      3) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; user_rename ; echo ; break ;;
+      # Touche "4" : bloquer un utilisateur
+      4) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; usrlock ; echo ; break ;;
+      # Touche "5" : afficher la liste des utilisateurs
+      5) echo ; list_users ; echo ; break ;;
+      # Touche "6" ou "Q" : revenir au menu principal
+      [6qQ]) echo ; break ;;
       # Autres touches : nouvelle saisie
       *) echo "Choix incorrect" ;;
     esac
@@ -109,9 +109,9 @@ function menu_groups ()
 
   # Options du menu (sudoer)
   menu_groups_opt=( \
-  "Créer un groupe (C)" \
-  "Supprimer un groupe (D)" \
-  "Afficher la liste des groupes (L)" \
+  "Créer un groupe" \
+  "Supprimer un groupe" \
+  "Afficher la liste des groupes" \
   "Revenir au menu principal (Q)" )
 
   # Options du menu (non sudoer)
@@ -123,14 +123,14 @@ function menu_groups ()
   select item in "${menu_groups_opt[@]}"
   do
     case $REPLY in
-      # Touche "C" : créer un groupe
-      [cC]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; group_create ; echo ; break ;;
-      # Touche "D" : supprimer un groupe
-      [dD]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; group_delete ; echo ; break ;;
-      # Touche "L" : afficher la liste des groupes
-      [lL]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; group_list ; echo ; break ;;
-      # Touche "Q" : revenir au menu principal
-      [qQ]) echo ; list_users ; echo ; break ;;
+      # Touche "1" : créer un groupe
+      1) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; group_create ; echo ; break ;;
+      # Touche "2" : supprimer un groupe
+      2) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; group_delete ; echo ; break ;;
+      # Touche "3" : afficher la liste des groupes
+      3) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; group_list ; echo ; break ;;
+      # Touche "4" ou "Q" : revenir au menu principal
+      [4qQ]) echo ; break ;;
       # Autres touches : nouvelle saisie
       *) echo "Choix incorrect" ;;
     esac
