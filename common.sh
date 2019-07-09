@@ -15,7 +15,7 @@ function blue_bold ()
 function test_sudoer ()
 {
 
-  # On redirige la sortie de la commande sudo -l dans le fichier err
+  # On redirige les erreurs de la commande sudo id vers le trou noir
   timeout 2 sudo id > /dev/null 2>&1 && sudoer="true" || sudoer="false"
 
 }
