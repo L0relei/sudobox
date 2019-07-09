@@ -13,6 +13,8 @@ done
 
 # création d'un utilisateur et de son mot de passe (pas d'obligation longeur mdp) 
 
-adduser $username
-passwd $username
+sudo adduser $username
+sudo passwd $username
 }
+
+add_user
