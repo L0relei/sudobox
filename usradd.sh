@@ -16,5 +16,3 @@ done
 sudo adduser $username
 sudo passwd $username
 }
-
-add_user
