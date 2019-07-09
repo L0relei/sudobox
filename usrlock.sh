@@ -13,5 +13,3 @@ else echo "utilisateur non existant"
 fi
 
 }
-
-usrlock
