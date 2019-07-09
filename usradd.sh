@@ -16,5 +16,3 @@ done
 adduser $username
 passwd $username
 }
-
-add_user
