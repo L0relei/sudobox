@@ -16,6 +16,6 @@ function test_sudoer ()
 {
 
   # On redirige les erreurs de la commande sudo id vers le trou noir
-  timeout 2 sudo id > /dev/null 2>&1 && sudoer="true" || sudoer="false"
+  sudo id > /dev/null 2>&1 && sudoer="true" || sudoer="false"
 
 }
