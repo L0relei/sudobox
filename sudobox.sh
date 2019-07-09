@@ -13,6 +13,7 @@
 . usradd.sh
 . list_users.sh
 . usrlock.sh
+. usrdel.sh
 
 clear
 blue_bold "------------------------------------"

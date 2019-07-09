@@ -77,7 +77,7 @@ function menu_users ()
       # Touche "C" : créer un utilisateur
       [cC]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; add_user ; echo ; break ;;
       # Touche "D" : supprimer un utilisateur
-      [dD]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo option2 ;;
+      [dD]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; user_del ; echo ; break ;;
       # Touche "R" : renommer un utilisateur
       [rR]) [ "$sudoer" = false ] && echo "Choix incorrect" || echo ; user_rename ; echo ; break ;;
       # Touche "B" : bloquer un utilisateur
