@@ -2,16 +2,14 @@
 #Script blocage utilisateur
 usrlock () {
 
-echo "quel utilisateur bloqué ?"
+echo "Quel utilisateur bloquer ?"
 
-read var1
-result=$(grep $var1 /etc/passwd | cut -d ':' -f1)
+read usrname
+result=$(grep ^"$usrname": /etc/passwd | cut -d ':' -f1)
 
-if [ $result == $var1 ]
-then passwd -l "$var1"
-else echo "utilisateur non existant"
+if [ $result == $usrname ]
+then sudo passwd -l "$usrname"
+else echo "Utilisateur non existant"
 fi
 
 }
-
-usrlock
