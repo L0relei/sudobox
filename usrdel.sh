@@ -19,7 +19,7 @@ function user_del ()
     done
 
  # Suppression du nom de l'utilisateur (home directory and mail spool)
-    sudo userdel -r "$uid"
+    sudo userdel "$uid"
 
     echo "L'utilisateur $uid a été supprimé avec succès."
 
@@ -30,3 +30,5 @@ function user_del ()
   done
 
 }
+
+
