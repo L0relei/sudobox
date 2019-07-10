@@ -22,7 +22,7 @@ function menu_main ()
   "Quitter (Q)" )                      
 
   # Modification du message de prompt de la commande select
-  PS3="Tapez la lettre correspondant à votre choix : "
+  PS3="Tapez votre choix : "
   
   # Exécution des commandes en fonction de la saisie de l'utilisateur
   select item in "${menu_main_opt[@]}"
@@ -54,7 +54,7 @@ function menu_users ()
   blue_bold "----------------------------"
 
   # Modification du message de prompt de la commande select
-  PS3="Tapez la lettre correspondant à votre choix : "
+  PS3="Tapez votre choix : "
 
   # Options du menu (sudoer)
   menu_users_opt=( \
@@ -118,7 +118,7 @@ function menu_groups ()
   blue_bold "--------------------------------------"
 
   # Modification du message de prompt de la commande select
-  PS3="Tapez la lettre correspondant à votre choix : "
+  PS3="Tapez votre choix : "
 
   # Options du menu (sudoer)
   menu_groups_opt=( \
