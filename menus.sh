@@ -1,9 +1,9 @@
 #!/bin/bash
-##############
-#            #
-# Menus v0.2 #
-#            #
-##############
+#########
+#       #
+# Menus #
+#       #
+#########
 
 # Menu principal 
 function menu_main ()
@@ -29,9 +29,9 @@ function menu_main ()
   do
     case $REPLY in
       # Touche "1" : menu de gestion des utilisateurs
-      1) echo ; menu_users ; break ;;
+      1) clear ; menu_users ; break ;;
       # Touche "2" : menu de gestion des groupes
-      2) echo ; menu_groups ; break ;;
+      2) clear ; menu_groups ; break ;;
       # Touche "3" : menu des gestion des fichiers et dossiers
       # 3) echo "Fonctionnalité à venir" ;;
       # Touche "4" : menu des gestion des permissions
@@ -77,35 +77,36 @@ function menu_users ()
     case $REPLY in
       # Touche "1" : créer un utilisateur
       1) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
-         else echo ; add_user ; echo ; break
+         else clear ; add_user ; break
          fi ;;
       # Touche "2" : supprimer un utilisateur
       2) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
-         else echo ; user_del ; echo ; break
+         else clear ; user_del ; break
          fi ;;
       # Touche "3" : renommer un utilisateur
       3) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
-         else echo ; user_rename ; echo ; break
+         else clear ; user_rename ; break
          fi ;;
       # Touche "4" : changer le répertoire home d'un utilisateur
       4) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
-         else echo ; user_change_home ; echo ; break
+         else clear ; user_change_home ; break
          fi ;;
       # Touche "5" : bloquer un utilisateur
       5) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
-         else echo ; usrlock ; echo ; break
+         else clear ; usrlock ; break
          fi ;;
       # Touche "6" : afficher la liste des utilisateurs
-      6) echo ; list_users ; echo ; break ;;
+      6) clear ; list_users ; read -p "Appuyez sur une touche pour continuer" -n 1 suite ; break ;;
       # Touche "7" ou "Q" : revenir au menu principal
-      [7qQ]) echo ; break ;;
+      [7qQ]) break ;;
       # Autres touches : nouvelle saisie
       *) echo "Choix incorrect" ;;
     esac
   done
 
-  # Retour au menu principal
-  menu_main
+  # Retour au menu de gestion des utilisateurs
+  clear
+  [[ $REPLY =~ [^7qQ] ]] && menu_users || menu_main
 
 }
 
@@ -138,24 +139,23 @@ function menu_groups ()
     case $REPLY in
       # Touche "1" : créer un groupe
       1) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
-         else echo ; group_create ; echo ; break
+         else clear ; group_create ; break
          fi ;;
       # Touche "2" : supprimer un groupe
       2) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
-         else echo ; group_delete ; echo ; break
+         else clear ; group_delete ; break
          fi ;;
       # Touche "3" : afficher la liste des groupes
-      3) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
-         else echo ; group_list ; echo ; break
-         fi ;;
+      3) clear ; group_list ; echo ; read -p "Appuyez sur une touche pour continuer" -n 1 suite ; break ;;
       # Touche "4" ou "Q" : revenir au menu principal
-      [4qQ]) echo ; break ;;
+      [4qQ]) break ;;
       # Autres touches : nouvelle saisie
       *) echo "Choix incorrect" ;;
     esac
   done
 
-  # Retour au menu principal
-  menu_main
+  # Retour au menu de gestion des groupes d'utilisateurs
+  clear
+  [[ $REPLY =~ [^4qQ] ]] && menu_groups || menu_main
 
 }
