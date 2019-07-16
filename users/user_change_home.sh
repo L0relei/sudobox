@@ -36,7 +36,10 @@ function user_change_home () {
     echo "Le répertoire home de l'utilisateur $user_name a été déplacé vers /home/$new_user_home avec succès."
 
     # Proposition de modifie le répertoire home d'un autre utilisateur
-    read -p "Voulez-vous modifier le répertoire home d'un autre utilisateur ? (O/N) " change_another
+    change_another=x
+    while [[ $change_another != [oOnN] ]] ; do
+      read -p "Voulez-vous modifier le répertoire home d'un autre utilisateur ? (O/N) " change_another
+    done
     [[ $change_another = [oO] ]] && echo
 
   done

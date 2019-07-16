@@ -27,7 +27,10 @@ function group_create () {
     echo "Le groupe $group_name a été créé avec succès."
 
     # Proposition de créer un autre groupe
-    read -p "Voulez-vous créer un autre groupe ? (O/N) " create_another
+    create_another=x
+    while [[ $create_another != [oOnN] ]] ; do
+      read -p "Voulez-vous créer un autre groupe ? (O/N) " create_another
+    done
     [[ $create_another = [oO] ]] && echo
 
   done

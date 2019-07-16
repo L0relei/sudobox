@@ -27,7 +27,10 @@ function group_delete () {
     [ -s err ] && echo "Le groupe $group_name doit être vide pour être supprimé." || echo "Le groupe $group_name a été supprimé avec succès."
 
     # Proposition de supprimer un autre groupe
-    read -p "Voulez-vous supprimer un autre groupe ? (O/N) " delete_another
+    delete_another=x
+    while [[ $delete_another != [oOnN] ]] ; do
+      read -p "Voulez-vous supprimer un autre groupe ? (O/N) " delete_another
+    done
     [[ $delete_another = [oO] ]] && echo
 
   done

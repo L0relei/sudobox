@@ -35,7 +35,10 @@ function user_rename () {
     echo "L'utilisateur $user_name a été renommé en $new_user_name avec succès."
 
     # Proposition de renommer un autre utilisateur
-    read -p "Voulez-vous renommer un autre utilisateur ? (O/N) " rename_another
+    change_another=x
+    while [[ $change_another != [oOnN] ]] ; do
+      read -p "Voulez-vous renommer un autre utilisateur ? (O/N) " rename_another
+    done
     [[ $rename_another = [oO] ]] && echo
 
   done
