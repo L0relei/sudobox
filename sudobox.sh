@@ -18,7 +18,9 @@ blue_bold "- Bienvenue dans la boîte à outils -"
 blue_bold "------------------------------------"
 echo
 
-# # Appel de la fonction qui teste si un utilisateur est sudoer ./common/common.sh
-test_sudoer
-# # Affichage du menu principal menus.sh
+# Affichage du menu de choix du mode d'utilisation de la boîte à outils (utilisateur ou sudoer)
+menu_mode
+# Affichage du menu principal menus.sh
 menu_main
+# Sécurisation du script : déconnexion du sudo
+sudo -k

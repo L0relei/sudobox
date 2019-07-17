@@ -5,6 +5,35 @@
 #       #
 #########
 
+# Menu de choix du mode d'utilisation de la boîte à outils
+function menu_mode () {
+
+  echo "Comment souhaitez-vous utiliser la boîte à outils ?"
+
+  # Options du menu
+  menu_mode_opt=( "En mode utilisateur" "En mode sudoer" )
+
+  # Modification du message de prompt de la commande select
+  PS3="Tapez votre choix : "  
+
+  # Exécution des commandes en fonction de la saisie de l'utilisateur
+  select item in "${menu_mode_opt[@]}"
+  do
+    case $REPLY in
+      # Touche "1" : utilisation sans les droits sudo
+      1) sudoer="false" ; break ;;
+      # Touche "2" : utilisation avec les droits sudo
+      2) test_sudoer ;
+         [ "$sudoer" = "false" ] && echo -e "Echec de saisie du mot du passe.\nLa boîte à outils est lancée en mode utilisateur." ;
+         echo ;
+         break ;;
+      # Autres touches : nouvelle saisie
+      *) echo "Choix incorrect" ;;
+    esac
+  done
+
+}
+
 # Menu principal 
 function menu_main ()
 {
@@ -57,7 +86,7 @@ function menu_users ()
   PS3="Tapez votre choix : "
 
   # Options du menu (sudoer)
-  menu_users_opt=( \
+  [ "$sudoer" = "true" ] && menu_users_opt=( \
   "Créer un utilisateur" \
   "Supprimer un utilisateur" \
   "Renommer un utilisateur" \
@@ -66,33 +95,39 @@ function menu_users ()
   "Afficher la liste des utilisateurs" \
   "Revenir au menu principal (Q)" )
 
-  # Options du menu (non sudoer)
-  # - Afficher la liste des utilisateurs
-  # - Revenir au menu principal
-  [ "$sudoer" = false ] && menu_users_opt=( "${menu_users_opt[5]}" "${menu_users_opt[6]}" )
+  # Options du menu (utilisateur)
+  [ "$sudoer" = "false" ] && menu_users_opt=( \
+  "Créer un utilisateur (*)" \
+  "Supprimer un utilisateur (*)" \
+  "Renommer un utilisateur (*)" \
+  "Changer le répertoire home d'un utilisateur (*)"
+  "Bloquer un utilisateur (*)" \
+  "Afficher la liste des utilisateurs" \
+  "Revenir au menu principal (Q)" )
 
-  # Exécution des commandes en fonction de la saisie de l'utilisateur
+  # Exécution des commandes en fonction de la saisie de l'utilisateur et du mode
+  [ "$sudoer" = "false" ] && echo "Les options marquées d'une (*) ne sont pas disponibles en mode utilisateur."
   select item in "${menu_users_opt[@]}"
   do
     case $REPLY in
       # Touche "1" : créer un utilisateur
-      1) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
+      1) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; add_user ; break
          fi ;;
       # Touche "2" : supprimer un utilisateur
-      2) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
+      2) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; user_del ; break
          fi ;;
       # Touche "3" : renommer un utilisateur
-      3) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
+      3) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; user_rename ; break
          fi ;;
       # Touche "4" : changer le répertoire home d'un utilisateur
-      4) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
+      4) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; user_change_home ; break
          fi ;;
       # Touche "5" : bloquer un utilisateur
-      5) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
+      5) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; usrlock ; break
          fi ;;
       # Touche "6" : afficher la liste des utilisateurs
@@ -106,7 +141,7 @@ function menu_users ()
 
   # Retour au menu de gestion des utilisateurs
   clear
-  [[ $REPLY =~ [^7qQ] ]] && menu_users || menu_main
+  [[ $REPLY = [7qQ] ]] && menu_main || menu_users
 
 }
 
@@ -122,27 +157,30 @@ function menu_groups ()
   PS3="Tapez votre choix : "
 
   # Options du menu (sudoer)
-  menu_groups_opt=( \
+  [ "$sudoer" = "true" ] && menu_groups_opt=( \
   "Créer un groupe" \
   "Supprimer un groupe" \
   "Afficher la liste des groupes" \
   "Revenir au menu principal (Q)" )
 
-  # Options du menu (non sudoer)
-  # - Afficher la liste des groupes
-  # - Revenir au menu principal
-  [ "$sudoer" = false ] && menu_groups_opt=( " ${menu_groups_opt[2]} ${menu_groups_opt[3]}" )
+  # Options du menu (utilisateur)
+  [ "$sudoer" = "false" ] && menu_groups_opt=( \
+  "Créer un groupe (*)" \
+  "Supprimer un groupe (*)" \
+  "Afficher la liste des groupes" \
+  "Revenir au menu principal (Q)" )
 
-  # Exécution des commandes en fonction de la saisie de l'utilisateur
+  # Exécution des commandes en fonction de la saisie de l'utilisateur et du mode
+  [ "$sudoer" = "false" ] && echo "Les options marquées d'une (*) ne sont pas disponibles en mode utilisateur."
   select item in "${menu_groups_opt[@]}"
   do
     case $REPLY in
       # Touche "1" : créer un groupe
-      1) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
+      1) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; group_create ; break
          fi ;;
       # Touche "2" : supprimer un groupe
-      2) if [ "$sudoer" = false ] ; then echo "Choix incorrect"
+      2) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; group_delete ; break
          fi ;;
       # Touche "3" : afficher la liste des groupes
@@ -156,6 +194,6 @@ function menu_groups ()
 
   # Retour au menu de gestion des groupes d'utilisateurs
   clear
-  [[ $REPLY =~ [^4qQ] ]] && menu_groups || menu_main
+  [[ $REPLY = [4qQ] ]] && menu_main || menu_groups
 
 }

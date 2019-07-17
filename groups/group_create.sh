@@ -7,7 +7,7 @@ function group_create () {
   echo
 
   create_another=o
-
+  
   # Saisie tant que l'utilisateur veut créer un nouveau groupe
   while [[ $create_another = [oO] ]]
   do
@@ -21,10 +21,11 @@ function group_create () {
       [ -n "$group_name" ] && [ "$group_name" = "$(sudo cat /etc/group | cut -d":" -f1 | grep ^"$group_name"$)" ] && echo "Ce groupe existe déjà."
     done
 
-    # Création du groupe
-    sudo groupadd $group_name
-
-    echo "Le groupe $group_name a été créé avec succès."
+    # Création du groupe avec redirection des erreurs
+    sudo groupadd $group_name > /dev/null 2>&1
+    erreur=$?
+    [ "$erreur" = 0 ] && echo "Le groupe $group_name a été créé avec succès."
+    [ "$erreur" = 3 ] && echo "$group_name n'est pas un nom de groupe valide."
 
     # Proposition de créer un autre groupe
     create_another=x
