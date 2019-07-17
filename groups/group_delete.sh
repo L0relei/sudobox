@@ -22,9 +22,9 @@ function group_delete () {
     done
 
     # Suppression du groupe en redirigeant les erreurs dans le fichier err
-    sudo groupdel $group_name > err 2>&1
-
-    [ -s err ] && echo "Le groupe $group_name doit être vide pour être supprimé." || echo "Le groupe $group_name a été supprimé avec succès."
+    sudo groupdel $group_name > /dev/null 2>&1
+    erreur=$?
+    [ "$erreur" = 8 ] && echo "Le groupe $group_name doit être vide pour être supprimé." || echo "Le groupe $group_name a été supprimé avec succès."
 
     # Proposition de supprimer un autre groupe
     delete_another=x
