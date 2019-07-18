@@ -160,6 +160,7 @@ function menu_groups ()
   [ "$sudoer" = "true" ] && menu_groups_opt=( \
   "Créer un groupe" \
   "Supprimer un groupe" \
+  "Afficher les informations sur un groupe" \
   "Afficher la liste des groupes" \
   "Revenir au menu principal (Q)" )
 
@@ -167,6 +168,7 @@ function menu_groups ()
   [ "$sudoer" = "false" ] && menu_groups_opt=( \
   "Créer un groupe (*)" \
   "Supprimer un groupe (*)" \
+  "Afficher les informations sur un groupe" \
   "Afficher la liste des groupes" \
   "Revenir au menu principal (Q)" )
 
@@ -183,10 +185,12 @@ function menu_groups ()
       2) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; group_delete ; break
          fi ;;
-      # Touche "3" : afficher la liste des groupes
-      3) clear ; group_list ; echo ; read -p "Appuyez sur une touche pour continuer" -n 1 suite ; break ;;
-      # Touche "4" ou "Q" : revenir au menu principal
-      [4qQ]) break ;;
+      # Touche "3" : afficher les informations sur un groupe
+      3) clear ; group_info ; break ;;
+      # Touche "4" : afficher la liste des groupes
+      4) clear ; group_list ; echo ; read -p "Appuyez sur une touche pour continuer" -n 1 suite ; break ;;
+      # Touche "5" ou "Q" : revenir au menu principal
+      [5qQ]) break ;;
       # Autres touches : nouvelle saisie
       *) echo "Choix incorrect" ;;
     esac
@@ -194,6 +198,6 @@ function menu_groups ()
 
   # Retour au menu de gestion des groupes d'utilisateurs
   clear
-  [[ $REPLY = [4qQ] ]] && menu_main || menu_groups
+  [[ $REPLY = [5qQ] ]] && menu_main || menu_groups
 
 }
