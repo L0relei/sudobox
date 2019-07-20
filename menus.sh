@@ -92,6 +92,7 @@ function menu_users ()
   "Renommer un utilisateur" \
   "Changer le répertoire home d'un utilisateur"
   "Bloquer un utilisateur" \
+  "Afficher les informations sur un utilisateur" \
   "Afficher la liste des utilisateurs" \
   "Revenir au menu principal (Q)" )
 
@@ -102,6 +103,7 @@ function menu_users ()
   "Renommer un utilisateur (*)" \
   "Changer le répertoire home d'un utilisateur (*)"
   "Bloquer un utilisateur (*)" \
+  "Afficher les informations sur un utilisateur" \
   "Afficher la liste des utilisateurs" \
   "Revenir au menu principal (Q)" )
 
@@ -130,10 +132,12 @@ function menu_users ()
       5) if [ "$sudoer" = "false" ] ; then echo "Choix incorrect"
          else clear ; usrlock ; break
          fi ;;
-      # Touche "6" : afficher la liste des utilisateurs
-      6) clear ; list_users ; read -p "Appuyez sur une touche pour continuer" -n 1 suite ; break ;;
-      # Touche "7" ou "Q" : revenir au menu principal
-      [7qQ]) break ;;
+      # Touche "6" : afficher les informations sur un utilisateur
+      6) clear ; user_info_menu ; break ;;
+      # Touche "7" : afficher la liste des utilisateurs
+      7) clear ; list_users ; read -p "Appuyez sur une touche pour continuer" -n 1 suite ; break ;;
+      # Touche "8" ou "Q" : revenir au menu principal
+      [8qQ]) break ;;
       # Autres touches : nouvelle saisie
       *) echo "Choix incorrect" ;;
     esac
