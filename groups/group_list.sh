@@ -1,12 +1,50 @@
 #!/bin/bash
 
-# Fonction pour afficher la liste des groupes d'utilisateurs
+# ID min et max pour les groupes d'utilisateurs réservés au système
+sysgidmin=$(grep ^SYS_GID_MIN /etc/login.defs | awk '{print $2}')
+sysgidmax=$(grep ^SYS_GID_MAX /etc/login.defs | awk '{print $2}')
+# ID min et max pour les groupes d'utilisateurs normaux
+gidmin=$(grep ^GID_MIN /etc/login.defs | awk '{print $2}')
+gidmax=$(grep ^GID_MAX /etc/login.defs | awk '{print $2}')
+
+# Fonction pour afficher la liste des groupes d'utilisateurs normaux
+function group_list_regular () {
+
+  blue_bold "Liste des groupes d'utilisateurs (sauf groupes réservés au système)"
+  cat /etc/group | sort -t":" -k3 | \
+  awk -F":" -v min="$gidmin" -v max="$gidmax" \
+  '{ if (($3 >= min) && ($3 <= max)) print $1 "(" $3 ")"}' \
+  | paste -s -d","
+  
+}
+
+# Fonction pour afficher la liste des groupes d'utilisateurs système
+function group_list_system () {
+
+  blue_bold "Liste des groupes d'utilisateurs (réservés au système)"
+  cat /etc/group | sort -t":" -k3 | \
+  awk -F":" -v smin="$sysgidmin" -v smax="$sysgidmax" \
+  '{ if (($3 >= smin) && ($3 <= smax)) print $1 "(" $3 ")" }' \
+  | paste -s -d","
+  
+}
+
+# Fonction pour afficher la liste des autres groupes d'utilisateurs (ni système ni normaux)
+function group_list_other () {
+
+  blue_bold "Liste des autres groupes d'utilisateurs"
+    cat /etc/group | sort -t":" -k3 | \
+  awk -F":" -v min="$gidmin" -v max="$gidmax" -v smin="$sysgidmin" -v smax="$sysgidmax" \
+  '{ if (!((($3 >= min) && ($3 <= max))) && (!((($3 >= smin) && ($3 <= smax))))) print $1 "(" $3 ")" }' \
+  | paste -s -d","
+  
+}
+
+# Fonction pour afficher la liste des tous les groupes d'utilisateurs
 function group_list () {
 
-  # La liste est lue dans le fichier /etc/group
-  # On filtre pour n'afficher que les noms des groupes dont l'ID est supérieur ou égal à 1001
-  # On affiche uniquement les noms de groupes sous forme de liste séparée par des virgules
-  blue_bold "Liste des groupes (sauf groupes réservés au système)"
-  cat /etc/group | egrep :[0-9]\{4,\}: | grep -v 1000 | cut -d":" -f1 | paste -s -d","
-  
+  group_list_regular
+  group_list_system
+  group_list_other
+
 }
