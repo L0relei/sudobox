@@ -1,37 +1,45 @@
 #!/bin/bash
 
-# Fonction pour supprimer un groupe d'utilisateurs par son nom
+# Fonction pour supprimer un groupe d'utilisateurs
 function group_delete () {
-
-  group_list
-  echo
 
   delete_another=o
 
-  # Saisie tant que le nom du groupe n'existe pas (chaîne vide incluse) ou que l'utilisateur veut supprimer un autre groupe
-  while [[ $delete_another = [oO] ]]
-  do
+  # Modification du message de prompt de la commande select
+  PS3="Tapez votre choix (Q pour quitter) : "
 
-    # Saisie du nom du groupe jusqu'à ce qu'il soit non vide et qu'il existe
-    group_name=""
-    while [ -z "$group_name" ] || [ -z "$(sudo cat /etc/group | cut -d":" -f1 | grep ^"$group_name"$)" ]
+  while [[ $delete_another = [oO] ]] ; do
+
+    # Stockage de la liste des groupes d'utilisateurs dans un tableau trié sur le GID
+    liste=( $(cat /etc/group | sort -t":" -k3 -n | cut -d":" -f1) )
+    
+    echo "Choisissez le groupe d'utilisateurs à supprimer :"
+
+    # Affichage du menu de choix du groupe d'utilisateurs
+    select item in ${liste[@]}
     do
-      read -p "Saisissez le nom du groupe à supprimer : " group_name
-      [ -z "$group_name" ] && echo "Le nom du groupe ne peut pas être vide."
-      [ -n "$group_name" ] && [ -z "$(sudo cat /etc/group | cut -d":" -f1 | grep ^"$group_name"$)" ] && echo "Ce groupe n'existe pas."
+      case $REPLY in
+        [qQ])
+          delete_another=n
+          break ;;
+        [0-9]*)
+          if [ "$REPLY" -le "${#liste[@]}" ] ; then
+            sudo groupdel ${liste[$REPLY-1]} > /dev/null 2>&1
+            erreur=$?
+            [ "$erreur" = 8 ] && echo "Le groupe ${liste[$REPLY-1]} doit être vide pour être supprimé." || echo "Le groupe ${liste[$REPLY-1]} a été supprimé avec succès."
+            delete_another=x
+          else
+            delete_another=o
+          fi
+          break ;;
+      esac
     done
 
-    # Suppression du groupe en redirigeant les erreurs dans le fichier err
-    sudo groupdel $group_name > /dev/null 2>&1
-    erreur=$?
-    [ "$erreur" = 8 ] && echo "Le groupe $group_name doit être vide pour être supprimé." || echo "Le groupe $group_name a été supprimé avec succès."
-
     # Proposition de supprimer un autre groupe
-    delete_another=x
     while [[ $delete_another != [oOnN] ]] ; do
       read -p "Voulez-vous supprimer un autre groupe ? (O/N) " delete_another
     done
-    [[ $delete_another = [oO] ]] && echo
+    [[ $delete_another = [oO] ]] && clear
 
   done
 

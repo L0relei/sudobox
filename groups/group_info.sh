@@ -4,42 +4,39 @@
 
 function group_info () {
   
-  # Appel de la fonction affichant la liste des groupes
-  group_list
-  echo
-
-  view_another=o
+  # Stockage de la liste des groupes d'utilisateurs dans un tableau trié sur le GID
+  liste=( $(cat /etc/group | sort -t":" -k3 -n | cut -d":" -f1) )
   
-  # Saisie tant que l'utilisateur veut voir des informations sur un groupe
-  while [[ $view_another = [oO] ]] ; do
+  # Modification du message de prompt de la commande select
+  PS3="Tapez votre choix (Q pour quitter) : "
 
-    # Saisie du nom du groupe jusqu'à ce qu'il soit non vide et qu'il existe
-    group_name=""
-    while [ -z "$group_name" ] || [ -z "$(cut -d":" -f1 /etc/group | grep ^"$group_name"$)" ] ; do
-      read -p "Saisissez le nom du groupe dont vous voulez voir les informations : " group_name
-      [ -z "$group_name" ] && echo "Le nom du groupe ne peut pas être vide."
-      [ -n "$group_name" ] && [ -z "$(cut -d":" -f1 /etc/group | grep ^"$group_name"$)" ] && echo "Ce groupe n'existe pas."
-    done
+  echo "Choisissez le groupe d'utilisateurs dont vous voulez voir les informations :"
 
-    # Affichage du numéro du groupe
-    group_id=$(cut -d":" -f1,3 /etc/group | grep ^"$group_name": | cut -d":" -f2)
-    echo "Numéro du groupe : $group_id"
-
-    # On recherche si le groupe est le groupe principal d'un utilisateur
-    main_group=$(cut -d":" -f1,4 /etc/passwd | grep :"$group_id"$ | cut -d":" -f1)
-    [ -n "$main_group" ] && echo "Le groupe $group_name est le groupe principal de l'utilisateur $main_group."
-    
-    # Affichage des membres du groupe s'il y en a
-    members=$(cut -d":" -f1,4 /etc/group | grep ^"$group_name": | cut -d":" -f2)
-    [ -n "$members""$main_group" ] && echo "Membres du groupe : $members$main_group" || echo "Le groupe est vide."
-
-    # Proposition de voir les informations d'un autre groupe
-    view_another=x
-    while [[ $view_another != [oOnN] ]] ; do
-      read -p "Voulez-vous voir les informations sur un autre groupe ? (O/N) " view_another
-    done
-    [[ $view_another = [oO] ]] && echo
-
+  # Affichage du menu de choix du groupe d'utilisateurs
+  select item in ${liste[@]}
+  do
+    case $REPLY in
+      [qQ])
+        break ;;
+      [0-9]*)
+        if [ "$REPLY" -le "${#liste[@]}" ] ; then
+          echo
+          echo -e "\033[4mInformations sur le groupe $item\033[0m"
+          # GID
+          group_id=$(getent group "${liste[$REPLY-1]}" | cut -d":" -f3)
+          echo "ID du groupe : $group_id"
+          # Groupe système
+          [ "$group_id" -ge "$sysgidmin" ] && [ "$group_id" -le "$sysgidmax" ] && echo "Groupe réservé au sytème."
+          # Utilisateurs dont ce groupe est le groupe principal
+          main_group=$(cut -d":" -f1,4 /etc/passwd | grep -w "$group_id" | cut -d":" -f1 | paste -s -d",")
+          [ -n "$main_group" ] && echo "Groupe principal de : $main_group"
+          # Membres du groupe
+          members=$(cut -d":" -f1,4 /etc/group | grep ^"$group_name": | cut -d":" -f2)
+          [ -n "$members""$main_group" ] && echo "Membres du groupe : $members$main_group." || echo "Le groupe est vide."
+          echo
+        fi
+        ;;
+    esac
   done
-    
+  
 }
