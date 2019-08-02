@@ -11,12 +11,12 @@ function group_delete () {
   while [[ $delete_another = [oO] ]] ; do
 
     # Stockage de la liste des groupes d'utilisateurs dans un tableau trié sur le GID
-    liste=( $(cat /etc/group | sort -t":" -k3 -n | cut -d":" -f1) )
+    liste=( $(sort -t":" -k3 -n /etc/group | cut -d":" -f1) )
     
     echo "Choisissez le groupe d'utilisateurs à supprimer :"
 
     # Affichage du menu de choix du groupe d'utilisateurs
-    select item in ${liste[@]}
+    select item in "${liste[@]}"
     do
       case $REPLY in
         [qQ])
@@ -24,9 +24,9 @@ function group_delete () {
           break ;;
         [0-9]*)
           if [ "$REPLY" -le "${#liste[@]}" ] ; then
-            sudo groupdel ${liste[$REPLY-1]} > /dev/null 2>&1
+            sudo groupdel "$item" > /dev/null 2>&1
             erreur=$?
-            [ "$erreur" = 8 ] && echo "Le groupe ${liste[$REPLY-1]} doit être vide pour être supprimé." || echo "Le groupe ${liste[$REPLY-1]} a été supprimé avec succès."
+            [ "$erreur" = 8 ] && echo "Le groupe $item doit être vide pour être supprimé." || echo "Le groupe $item a été supprimé avec succès."
             delete_another=x
           else
             delete_another=o
