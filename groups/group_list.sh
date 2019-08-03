@@ -4,9 +4,9 @@
 function group_list_regular () {
 
   blue_bold "Liste des groupes d'utilisateurs (sauf groupes réservés au système)"
-  cat /etc/group | sort -t":" -k3 -n | \
+  sort -t":" -k3 -n /etc/group | \
   awk -F":" -v min="$gidmin" -v max="$gidmax" \
-  '{ if (($3 >= min) && ($3 <= max)) print $1 "(" $3 ")"}' \
+  '$3 >= min && $3 <= max { print $1 "(" $3 ")" }' \
   | paste -s -d","
   
 }
@@ -15,9 +15,9 @@ function group_list_regular () {
 function group_list_system () {
 
   blue_bold "Liste des groupes d'utilisateurs (réservés au système)"
-  cat /etc/group | sort -t":" -k3 -n | \
+  sort -t":" -k3 -n /etc/group | \
   awk -F":" -v smin="$sysgidmin" -v smax="$sysgidmax" \
-  '{ if (($3 >= smin) && ($3 <= smax)) print $1 "(" $3 ")" }' \
+  '$3 >= smin && $3 <= smax { print $1 "(" $3 ")" }' \
   | paste -s -d","
   
 }
@@ -26,9 +26,9 @@ function group_list_system () {
 function group_list_other () {
 
   blue_bold "Liste des autres groupes d'utilisateurs"
-  cat /etc/group | sort -t":" -k3 -n | \
+  sort -t":" -k3 -n /etc/group | \
   awk -F":" -v min="$gidmin" -v max="$gidmax" -v smin="$sysgidmin" -v smax="$sysgidmax" \
-  '{ if (!((($3 >= min) && ($3 <= max))) && (!((($3 >= smin) && ($3 <= smax))))) print $1 "(" $3 ")" }' \
+  '!($3 >= min && $3 <= max) && !($3 >= smin && $3 <= smax) { print $1 "(" $3 ")" }' \
   | paste -s -d","
   
 }
