@@ -9,20 +9,18 @@ function group_create () {
   create_another=o
   
   # Saisie tant que l'utilisateur veut créer un nouveau groupe
-  while [[ $create_another = [oO] ]]
-  do
+  while [[ $create_another = [oO] ]] ; do
 
     # Saisie du nom du groupe jusqu'à ce qu'il soit non vide et qu'il n'existe pas déjà
     group_name=root
-    while [ -z "$group_name" ] || [ "$group_name" = "$(sudo cat /etc/group | cut -d":" -f1 | grep ^"$group_name"$)" ]
-    do
+    while [ -z "$group_name" ] || [ "$(getent group "$group_name")" ] ; do
       read -p "Saisissez le nom du groupe à créer : " group_name
       [ -z "$group_name" ] && echo "Le nom du groupe ne peut pas être vide."
-      [ -n "$group_name" ] && [ "$group_name" = "$(sudo cat /etc/group | cut -d":" -f1 | grep ^"$group_name"$)" ] && echo "Ce groupe existe déjà."
+      [ -n "$group_name" ] && [ "$(getent group "$group_name")" ] && echo "Ce groupe existe déjà."
     done
 
     # Création du groupe avec redirection des erreurs
-    sudo groupadd $group_name > /dev/null 2>&1
+    sudo groupadd "$group_name" > /dev/null 2>&1
     erreur=$?
     [ "$erreur" = 0 ] && echo "Le groupe $group_name a été créé avec succès."
     [ "$erreur" = 3 ] && echo "$group_name n'est pas un nom de groupe valide."
